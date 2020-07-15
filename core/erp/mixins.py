@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
@@ -36,4 +36,5 @@ class ValidatePermissionRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if request.user.has_perm(self.get_perms()):
             return super().dispatch(request, *args, **kwargs)
+        messages.error(request, 'aqqui')
         return HttpResponseRedirect(self.get_url_redirect())

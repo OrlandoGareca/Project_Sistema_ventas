@@ -14,7 +14,7 @@ from core.erp.forms import CategoryForm
 
 
 class CategoryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
-    permission_required = 'erp.delete_category'
+    permission_required = 'erp.change_category'
     model = Category
     template_name = 'category/list.html'
 
@@ -33,8 +33,12 @@ class CategoryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
             action = request.POST['action']
             if action == 'searchdata':
                 data = []
+                position = 1
                 for i in Category.objects.all():
-                    data.append(i.toJSON())
+                    item = i.toJSON()
+                    item['position'] = position
+                    data.append(item)
+                    position += 1
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -53,7 +57,9 @@ class CategoryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
         return context
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(ValidatePermissionRequiredMixin,CreateView):
+    permission_required = 'erp.view_category'
+    url_redirect = reverse_lazy('erp:category_list')
     model = Category
     form_class = CategoryForm
     template_name = 'category/create.html'

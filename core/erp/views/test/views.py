@@ -28,7 +28,7 @@ class TestView(TemplateView):
                     data.append({'id': i.id, 'text': i.name})
             elif action == 'autocomplete':
                 data= []
-                for i in Category.objects.filter(name__icontains=request.POST['term'])[0:10]:
+                for i in Product.objects.filter(name__icontains=request.POST['term'])[0:10]:
                     item = i.toJSON()
                     item['text'] = i.name
                     #item['value'] = i.name
